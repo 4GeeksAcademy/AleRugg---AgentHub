@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentHub - Gestión de Agentes IA</title>
+  
+  <!-- Tailwind CSS v4 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Material Symbols -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    * { font-family: 'Geist', system-ui, -apple-system, sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    
+    /* Responsive Sidebar */
+    @media (max-width: 1023px) {
+      aside {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        width: 100%;
+        max-width: 280px;
+      }
+      aside.mobile-open {
+        transform: translateX(0);
+      }
+      #sidebar-overlay {
+        display: none;
+      }
+      #sidebar-overlay.mobile-open {
+        display: block;
+      }
+    }
+    
+    /* Main content responsive */
+    @media (max-width: 1023px) {
+      .lg\:ml-64 {
+        margin-left: 0;
+      }
+    }
+    
+    /* Mobile menu button */
+    #mobile-menu-btn {
+      display: none;
+    }
+    @media (max-width: 1023px) {
+      #mobile-menu-btn {
+        display: flex;
+      }
+    }
+    
+    /* Topbar responsive */
+    @media (max-width: 768px) {
+      header h2 {
+        font-size: 1rem;
+      }
+    }
+    
+    /* Main content padding */
+    @media (max-width: 768px) {
+      .p-4 {
+        padding: 1rem;
+      }
+      main {
+        padding: 0;
+      }
+    }
+    
+    /* Tabla responsive */
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    @media (max-width: 768px) {
+      .table-responsive table {
+        min-width: 600px;
+      }
+      table th, table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.75rem;
+      }
+    }
+    
+    /* Ocultar columnas en móvil si es necesario */
+    @media (max-width: 640px) {
+      table th:nth-child(n+4),
+      table td:nth-child(n+4) {
+        display: none;
+      }
+    }
+    
+    /* Grid responsive ajustes */
+    @media (max-width: 640px) {
+      .grid-cols-1 {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Modal responsive */
+    @media (max-width: 768px) {
+      .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .modal-dialog {
+        margin: 1rem;
+      }
+      #configure-modal > div {
+        max-width: 95vw;
+      }
+    }
+    
+    /* Ajustes para flex en móvil */
+    @media (max-width: 640px) {
+      .flex-col-mobile {
+        flex-direction: column;
+      }
+      .gap-6 {
+        gap: 1rem;
+      }
+    }
+    
+    /* Ocultar elementos en móvil */
+    @media (max-width: 768px) {
+      .hidden-mobile {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-indigo-50 transition-colors duration-300">
+  <div id="app">
+    <!-- Sidebar Overlay (Mobile) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+    
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-0 h-screen lg:w-64 w-full lg:translate-x-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex flex-col z-40 lg:z-20">
+      <div class="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+        <div>
+          <h1 class="text-xl font-bold text-indigo-600 dark:text-indigo-300">AgentHub</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Gestión de Agentes IA</p>
+        </div>
+        <button id="close-sidebar-btn" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <nav class="flex-1 overflow-y-auto py-4 px-3">
+        <div class="space-y-2">
+          <a href="#" data-path="dashboard" class="nav-link flex items-center gap-3 px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 font-medium transition-colors">
+            <span class="material-symbols-outlined text-5xl" style="font-size: 20px;">dashboard</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" data-path="usuarios" class="nav-link flex items-center gap-3 px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-5xl" style="font-size: 20px;">people</span>
+            <span>Usuarios</span>
+          </a>
+          <a href="#" data-path="agentes" class="nav-link flex items-center gap-3 px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-5xl" style="font-size: 20px;">smart_toy</span>
+            <span>Agentes</span>
+          </a>
+          <a href="#" data-path="skills" class="nav-link flex items-center gap-3 px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-5xl" style="font-size: 20px;">extension</span>
+            <span>Skills</span>
+          </a>
+          <a href="#" data-path="contrataciones" class="nav-link flex items-center gap-3 px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-5xl" style="font-size: 20px;">contract</span>
+            <span>Contrataciones</span>
+          </a>
+          <a href="#" data-path="errores" class="nav-link flex items-center gap-3 px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-5xl" style="font-size: 20px;">error</span>
+            <span>Log de Errores</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 flex flex-col h-screen">
+      <!-- Topbar -->
+      <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-4 md:px-6 z-30">
+        <div class="flex items-center gap-4">
+          <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+          <h2 id="page-title" class="text-base md:text-lg font-semibold text-slate-900 dark:text-indigo-50">Dashboard</h2>
+        </div>
+        <div class="flex items-center gap-4">
+          <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined">light_mode</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 overflow-y-auto">
+        <div class="p-4 md:p-6">
+          <!-- Dashboard Section -->
+          <section id="dashboard" class="section space-y-6">
+            <h1 class="text-xl md:text-xl md:text-2xl font-bold text-slate-900 dark:text-indigo-50">Dashboard</h1>
+            
+            <!-- Metrics Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+              <!-- Ingresos Totales -->
+              <div class="relative overflow-hidden bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md dark:hover:shadow-lg transition-all group">
+                <div class="absolute -right-8 -bottom-8 w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900/20 blur-xl pointer-events-none opacity-60"></div>
+                <div class="relative z-10">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-500 dark:text-slate-400">Ingresos</span>
+                    <div class="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
+                      <span class="material-symbols-outlined" style="font-size: 14px;">trending_up</span> +3.2%
+                    </div>
+                  </div>
+                  <h3 class="text-sm text-slate-600 dark:text-slate-300 font-medium mb-1">Ingresos totales del mes</h3>
+                  <p class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-indigo-50 font-mono">$45,320</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-3">vs. $43,850 mes anterior</p>
+                </div>
+              </div>
+
+              <!-- Pérdidas por Descuentos -->
+              <div class="relative overflow-hidden bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md dark:hover:shadow-lg transition-all group">
+                <div class="absolute -right-8 -bottom-8 w-24 h-24 rounded-full bg-amber-100 dark:bg-amber-900/20 blur-xl pointer-events-none opacity-60"></div>
+                <div class="relative z-10">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-500 dark:text-slate-400">Descuentos</span>
+                    <div class="flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold">
+                      <span class="material-symbols-outlined" style="font-size: 14px;">trending_down</span> -2.1%
+                    </div>
+                  </div>
+                  <h3 class="text-sm text-slate-600 dark:text-slate-300 font-medium mb-1">Pérdidas por descuentos</h3>
+                  <p class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-indigo-50 font-mono">-$8,320</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-3">6.47% del volumen total</p>
+                </div>
+              </div>
+
+              <!-- Agentes Activos -->
+              <div class="relative overflow-hidden bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md dark:hover:shadow-lg transition-all group">
+                <div class="absolute -right-8 -bottom-8 w-24 h-24 rounded-full bg-emerald-100 dark:bg-emerald-900/20 blur-xl pointer-events-none opacity-60"></div>
+                <div class="relative z-10">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-500 dark:text-slate-400">Operaciones</span>
+                    <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> ONLINE
+                    </div>
+                  </div>
+                  <h3 class="text-sm text-slate-600 dark:text-slate-300 font-medium mb-1">Agentes activos</h3>
+                  <p class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-indigo-50 font-mono">142 <span class="text-sm text-slate-500 dark:text-slate-400 font-normal">instancias</span></p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-3">98.4% disponibilidad</p>
+                </div>
+              </div>
+
+              <!-- Agentes Fallando -->
+              <div class="relative overflow-hidden bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-rose-300 dark:hover:border-rose-700 hover:shadow-md dark:hover:shadow-lg transition-all group">
+                <div class="absolute -right-8 -bottom-8 w-24 h-24 rounded-full bg-rose-100 dark:bg-rose-900/20 blur-xl pointer-events-none opacity-60"></div>
+                <div class="relative z-10">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-500 dark:text-slate-400">Incidencias</span>
+                    <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-xs font-semibold">
+                      <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                      </span> CRÍTICO
+                    </div>
+                  </div>
+                  <h3 class="text-sm text-slate-600 dark:text-slate-300 font-medium mb-1">Agentes fallando</h3>
+                  <p class="text-2xl md:text-3xl font-bold text-rose-600 dark:text-rose-400 font-mono">3 <span class="text-sm text-rose-600/70 dark:text-rose-400/70 font-normal">en riesgo</span></p>
+                  <p class="text-xs text-rose-600/80 dark:text-rose-400/80 mt-3">Timeout API / Cuota excedida</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity Chart -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6">
+              <div class="mb-6">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs uppercase font-semibold tracking-wider text-slate-500 dark:text-slate-400 px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">Actividad</span>
+                  <h3 class="text-base md:text-lg font-semibold text-slate-900 dark:text-indigo-50">Actividad semanal: ejecuciones de agentes</h3>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300">Volumen diario consolidado de llamadas de función y pipelines autónomos (últimos 7 días)</p>
+              </div>
+
+              <div class="flex justify-between items-end h-64 gap-2 px-2">
+                <!-- Lunes -->
+                <div class="flex flex-col items-center flex-1">
+                  <div class="relative w-full flex items-end justify-center h-48">
+                    <div class="w-full max-w-12 bg-gradient-to-t from-indigo-600 to-indigo-500 dark:from-indigo-500 dark:to-indigo-400 rounded-t-lg hover:from-indigo-700 hover:to-indigo-600 dark:hover:from-indigo-600 dark:hover:to-indigo-500 transition-all cursor-pointer group" style="height: 60%;">
+                      <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-900 dark:text-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity">340</div>
+                    </div>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-3">Mon</p>
+                </div>
+
+                <!-- Martes -->
+                <div class="flex flex-col items-center flex-1">
+                  <div class="relative w-full flex items-end justify-center h-48">
+                    <div class="w-full max-w-12 bg-gradient-to-t from-indigo-600 to-indigo-500 dark:from-indigo-500 dark:to-indigo-400 rounded-t-lg hover:from-indigo-700 hover:to-indigo-600 dark:hover:from-indigo-600 dark:hover:to-indigo-500 transition-all cursor-pointer group" style="height: 78%;">
+                      <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-900 dark:text-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity">520</div>
+                    </div>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-3">Tue</p>
+                </div>
+
+                <!-- Miércoles -->
+                <div class="flex flex-col items-center flex-1">
+                  <div class="relative w-full flex items-end justify-center h-48">
+                    <div class="w-full max-w-12 bg-gradient-to-t from-indigo-600 to-indigo-500 dark:from-indigo-500 dark:to-indigo-400 rounded-t-lg hover:from-indigo-700 hover:to-indigo-600 dark:hover:from-indigo-600 dark:hover:to-indigo-500 transition-all cursor-pointer group" style="height: 100%;">
+                      <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-900 dark:text-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity">680</div>
+                    </div>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-3">Wed</p>
+                </div>
+
+                <!-- Jueves -->
+                <div class="flex flex-col items-center flex-1">
+                  <div class="relative w-full flex items-end justify-center h-48">
+                    <div class="w-full max-w-12 bg-gradient-to-t from-indigo-600 to-indigo-500 dark:from-indigo-500 dark:to-indigo-400 rounded-t-lg hover:from-indigo-700 hover:to-indigo-600 dark:hover:from-indigo-600 dark:hover:to-indigo-500 transition-all cursor-pointer group" style="height: 72%;">
+                      <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-900 dark:text-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity">480</div>
+                    </div>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-3">Thu</p>
+                </div>
+
+                <!-- Viernes -->
+                <div class="flex flex-col items-center flex-1">
+                  <div class="relative w-full flex items-end justify-center h-48">
+                    <div class="w-full max-w-12 bg-gradient-to-t from-indigo-600 to-indigo-500 dark:from-indigo-500 dark:to-indigo-400 rounded-t-lg hover:from-indigo-700 hover:to-indigo-600 dark:hover:from-indigo-600 dark:hover:to-indigo-500 transition-all cursor-pointer group" style="height: 55%;">
+                      <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-900 dark:text-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity">360</div>
+                    </div>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-3">Fri</p>
+                </div>
+
+                <!-- Sábado -->
+                <div class="flex flex-col items-center flex-1">
+                  <div class="relative w-full flex items-end justify-center h-48">
+                    <div class="w-full max-w-12 bg-gradient-to-t from-indigo-600 to-indigo-500 dark:from-indigo-500 dark:to-indigo-400 rounded-t-lg hover:from-indigo-700 hover:to-indigo-600 dark:hover:from-indigo-600 dark:hover:to-indigo-500 transition-all cursor-pointer group" style="height: 42%;">
+                      <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-900 dark:text-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity">280</div>
+                    </div>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-3">Sat</p>
+                </div>
+
+                <!-- Domingo -->
+                <div class="flex flex-col items-center flex-1">
+                  <div class="relative w-full flex items-end justify-center h-48">
+                    <div class="w-full max-w-12 bg-gradient-to-t from-indigo-600 to-indigo-500 dark:from-indigo-500 dark:to-indigo-400 rounded-t-lg hover:from-indigo-700 hover:to-indigo-600 dark:hover:from-indigo-600 dark:hover:to-indigo-500 transition-all cursor-pointer group" style="height: 51%;">
+                      <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-900 dark:text-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity">340</div>
+                    </div>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-3">Sun</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 md:gap-6 mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-2">
+                  <div class="w-3 h-3 rounded-sm bg-indigo-600 dark:bg-indigo-500"></div>
+                  <span class="text-sm text-slate-600 dark:text-slate-300">Ejecuciones</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity Table -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                <h3 class="text-base md:text-lg font-semibold text-slate-900 dark:text-indigo-50">Historial de Actividad Reciente</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">Las 10 ejecuciones más recientes de agentes en la plataforma</p>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Timestamp</th>
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Agente</th>
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Acción</th>
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Duración</th>
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 14:35</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">DataBot</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Ejecución</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">2.5s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"><span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Éxito</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 14:28</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">WebScraperAI</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Completado</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">12.8s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"><span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Éxito</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 14:15</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">AnalysisBot</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Error</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">0.3s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400"><span class="material-symbols-outlined" style="font-size: 14px;">error</span> Fallo</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 14:02</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">CalendarBot</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">En progreso</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">5.2s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"><span class="material-symbols-outlined" style="font-size: 14px;">schedule</span> En progreso</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 13:58</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">ReportGen</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Ejecución</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">8.1s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"><span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Éxito</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 13:45</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">ImageBot</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Completado</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">3.7s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"><span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Éxito</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 13:32</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">MailBot</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Error</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">0.8s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-600"><span class="material-symbols-outlined" style="font-size: 14px;">warning</span> Advertencia</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 13:20</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">SynthBot</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Ejecución</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">1.9s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"><span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Éxito</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 13:10</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">DataBot</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Completado</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">4.3s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"><span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Éxito</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">Nov 20, 12:58</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-900 dark:text-indigo-50 font-medium">QueryOptimizer</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Ejecución</td>
+                      <td class="px-3 md:px-6 py-4 font-mono text-slate-700 dark:text-slate-300 text-right">0.6s</td>
+                      <td class="px-3 md:px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"><span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Éxito</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Usuarios Section -->
+          <section id="usuarios" class="section space-y-6 hidden">
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-indigo-50">Gestión de Usuarios</h1>
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Nombre</th>
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Email</th>
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Plan</th>
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Estado</th>
+                      <th class="px-3 md:px-6 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wide">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                      <td class="px-3 md:px-6 py-3 text-slate-900 dark:text-indigo-50 font-medium">María García</td>
+                      <td class="px-3 md:px-6 py-3 text-slate-600 dark:text-slate-300">maria.garcia@empresa.com</td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-lg text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300">Professional</span></td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Activo</span></td>
+                      <td class="px-3 md:px-6 py-3 flex gap-1 md:gap-2">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                      </td>
+                    </tr>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                      <td class="px-3 md:px-6 py-3 text-slate-900 dark:text-indigo-50 font-medium">Carlos López</td>
+                      <td class="px-3 md:px-6 py-3 text-slate-600 dark:text-slate-300">carlos.lopez@tech.io</td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-lg text-xs font-medium bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">Enterprise</span></td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Activo</span></td>
+                      <td class="px-3 md:px-6 py-3 flex gap-1 md:gap-2">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                      </td>
+                    </tr>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                      <td class="px-3 md:px-6 py-3 text-slate-900 dark:text-indigo-50 font-medium">Ana Rodríguez</td>
+                      <td class="px-3 md:px-6 py-3 text-slate-600 dark:text-slate-300">ana.rodriguez@startup.co</td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-lg text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">Starter</span></td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Inactivo</span></td>
+                      <td class="px-3 md:px-6 py-3 flex gap-1 md:gap-2">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                      </td>
+                    </tr>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                      <td class="px-3 md:px-6 py-3 text-slate-900 dark:text-indigo-50 font-medium">David Pérez</td>
+                      <td class="px-3 md:px-6 py-3 text-slate-600 dark:text-slate-300">david.perez@company.net</td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-lg text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300">Professional</span></td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Activo</span></td>
+                      <td class="px-3 md:px-6 py-3 flex gap-1 md:gap-2">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                      </td>
+                    </tr>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                      <td class="px-3 md:px-6 py-3 text-slate-900 dark:text-indigo-50 font-medium">Laura Martínez</td>
+                      <td class="px-3 md:px-6 py-3 text-slate-600 dark:text-slate-300">laura.martinez@cloud.dev</td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-lg text-xs font-medium bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">Enterprise</span></td>
+                      <td class="px-3 md:px-6 py-3"><span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Activo</span></td>
+                      <td class="px-3 md:px-6 py-3 flex gap-1 md:gap-2">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Agentes Section -->
+          <section id="agentes" class="section space-y-6 hidden">
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-indigo-50">Gestión de Agentes</h1>
+            <div class="space-y-4">
+              <!-- Agent 1 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                  <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">DataBot</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Propietario: María García | Estado: <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Activo</span></p>
+                  </div>
+                  <div class="flex gap-1 md:gap-2">
+                    <button class="px-3 py-2 rounded-lg text-sm font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-colors">Configurar</button>
+                    <button class="px-3 py-2 rounded-lg text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+                
+                <!-- Skills Collapsible -->
+                <div class="px-6 py-3 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                  <button class="agent-skills-toggle flex items-center gap-2 w-full text-left font-medium text-slate-900 dark:text-indigo-50 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors" data-agent="databot">
+                    <span class="material-symbols-outlined text-5xl" style="font-size: 20px; transition: transform 200ms;">expand_more</span>
+                    <span>Skills Habilitadas (3)</span>
+                  </button>
+                  
+                  <div class="agent-skills-content hidden mt-3 space-y-2 pl-8">
+                    <div class="flex items-start justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                      <div>
+                        <p class="font-medium text-slate-900 dark:text-indigo-50">Web Browsing</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Permite navegación por internet y extracción de información</p>
+                      </div>
+                      <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 whitespace-nowrap ml-4">Habilitada</span>
+                    </div>
+                    <div class="flex items-start justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                      <div>
+                        <p class="font-medium text-slate-900 dark:text-indigo-50">Document Analysis</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Lectura y análisis de documentos PDF, Word, Excel</p>
+                      </div>
+                      <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 whitespace-nowrap ml-4">Habilitada</span>
+                    </div>
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="font-medium text-slate-900 dark:text-indigo-50">Data Export</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Exportación de datos en múltiples formatos</p>
+                      </div>
+                      <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 whitespace-nowrap ml-4">Deshabilitada</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Agent 2 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                  <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">WebScraperAI</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Propietario: Carlos López | Estado: <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Activo</span></p>
+                  </div>
+                  <div class="flex gap-1 md:gap-2">
+                    <button class="px-3 py-2 rounded-lg text-sm font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-colors">Configurar</button>
+                    <button class="px-3 py-2 rounded-lg text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+                
+                <div class="px-6 py-3 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                  <button class="agent-skills-toggle flex items-center gap-2 w-full text-left font-medium text-slate-900 dark:text-indigo-50 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors" data-agent="webscrapai">
+                    <span class="material-symbols-outlined text-5xl" style="font-size: 20px; transition: transform 200ms;">expand_more</span>
+                    <span>Skills Habilitadas (2)</span>
+                  </button>
+                  
+                  <div class="agent-skills-content hidden mt-3 space-y-2 pl-8">
+                    <div class="flex items-start justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                      <div>
+                        <p class="font-medium text-slate-900 dark:text-indigo-50">Web Browsing</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Permite navegación por internet y extracción de información</p>
+                      </div>
+                      <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 whitespace-nowrap ml-4">Habilitada</span>
+                    </div>
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="font-medium text-slate-900 dark:text-indigo-50">Screenshot Capture</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Captura de pantallas y visuals desde sitios web</p>
+                      </div>
+                      <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 whitespace-nowrap ml-4">Habilitada</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Agent 3 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                  <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">AnalysisBot</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Propietario: Ana Rodríguez | Estado: <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400">Fallando</span></p>
+                  </div>
+                  <div class="flex gap-1 md:gap-2">
+                    <button class="px-3 py-2 rounded-lg text-sm font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-colors">Configurar</button>
+                    <button class="px-3 py-2 rounded-lg text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+                
+                <div class="px-6 py-3 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                  <button class="agent-skills-toggle flex items-center gap-2 w-full text-left font-medium text-slate-900 dark:text-indigo-50 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors" data-agent="analysisbot">
+                    <span class="material-symbols-outlined text-5xl" style="font-size: 20px; transition: transform 200ms;">expand_more</span>
+                    <span>Skills Habilitadas (3)</span>
+                  </button>
+                  
+                  <div class="agent-skills-content hidden mt-3 space-y-2 pl-8">
+                    <div class="flex items-start justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                      <div>
+                        <p class="font-medium text-slate-900 dark:text-indigo-50">Document Analysis</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Lectura y análisis de documentos PDF, Word, Excel</p>
+                      </div>
+                      <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 whitespace-nowrap ml-4">Habilitada</span>
+                    </div>
+                    <div class="flex items-start justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                      <div>
+                        <p class="font-medium text-slate-900 dark:text-indigo-50">Data Visualization</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Creación de gráficos y visualizaciones de datos</p>
+                      </div>
+                      <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 whitespace-nowrap ml-4">Habilitada</span>
+                    </div>
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="font-medium text-slate-900 dark:text-indigo-50">Report Generation</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Generación automática de reportes en PDF</p>
+                      </div>
+                      <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 whitespace-nowrap ml-4">Deshabilitada</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Skills Section -->
+          <section id="skills" class="section space-y-6 hidden">
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-indigo-50">Catálogo de Skills</h1>
+            <p class="text-slate-600 dark:text-slate-300">Las <strong>skills</strong> son capacidades especializadas que pueden ser asignadas a agentes para extender su funcionalidad. Cada skill representa una función específica (web browsing, análisis de documentos, integración de calendarios, etc.)</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Skill Card 1 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors">
+                <div class="flex items-start justify-between mb-3">
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Web Browsing</h3>
+                  <span class="material-symbols-outlined text-4xl text-indigo-600 dark:text-indigo-300" style="font-size: 28px;">language</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">Permite a agentes navegar por internet y extraer información desde sitios web</p>
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <p class="text-xs text-slate-500 dark:text-slate-400"><strong>Usada por:</strong> 2 agentes</p>
+                  <div class="mt-3 flex gap-1 md:gap-2">
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Skill Card 2 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors">
+                <div class="flex items-start justify-between mb-3">
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Document Analysis</h3>
+                  <span class="material-symbols-outlined text-4xl text-green-600 dark:text-green-400" style="font-size: 28px;">description</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">Lectura y análisis de documentos PDF, Word, Excel y otros formatos</p>
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <p class="text-xs text-slate-500 dark:text-slate-400"><strong>Usada por:</strong> 3 agentes</p>
+                  <div class="mt-3 flex gap-1 md:gap-2">
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Skill Card 3 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors">
+                <div class="flex items-start justify-between mb-3">
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Calendar Integration</h3>
+                  <span class="material-symbols-outlined text-4xl text-blue-600 dark:text-blue-400" style="font-size: 28px;">calendar_today</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">Gestión de calendarios y programación de eventos automática</p>
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <p class="text-xs text-slate-500 dark:text-slate-400"><strong>Usada por:</strong> 1 agente</p>
+                  <div class="mt-3 flex gap-1 md:gap-2">
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Skill Card 4 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors">
+                <div class="flex items-start justify-between mb-3">
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Data Visualization</h3>
+                  <span class="material-symbols-outlined text-4xl text-purple-600 dark:text-purple-400" style="font-size: 28px;">bar_chart</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">Creación de gráficos, dashboards y visualizaciones interactivas</p>
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <p class="text-xs text-slate-500 dark:text-slate-400"><strong>Usada por:</strong> 1 agente</p>
+                  <div class="mt-3 flex gap-1 md:gap-2">
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Skill Card 5 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors">
+                <div class="flex items-start justify-between mb-3">
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Email Management</h3>
+                  <span class="material-symbols-outlined text-4xl text-orange-600 dark:text-orange-400" style="font-size: 28px;">mail</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">Lectura, redacción y gestión automática de correos electrónicos</p>
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <p class="text-xs text-slate-500 dark:text-slate-400"><strong>Usada por:</strong> 2 agentes</p>
+                  <div class="mt-3 flex gap-1 md:gap-2">
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Skill Card 6 -->
+              <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-6 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors">
+                <div class="flex items-start justify-between mb-3">
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Code Execution</h3>
+                  <span class="material-symbols-outlined text-4xl text-pink-600 dark:text-pink-400" style="font-size: 28px;">terminal</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">Ejecución segura de código Python, JavaScript y otros lenguajes</p>
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <p class="text-xs text-slate-500 dark:text-slate-400"><strong>Usada por:</strong> 1 agente</p>
+                  <div class="mt-3 flex gap-1 md:gap-2">
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                    <button class="px-3 py-1 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Contrataciones Section -->
+          <section id="contrataciones" class="section space-y-6 hidden">
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-indigo-50">Contrataciones de Agentes</h1>
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Cliente</th>
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Agente</th>
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Skills Contratadas</th>
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Inicio</th>
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Fin</th>
+                      <th class="px-6 py-3 text-right font-semibold text-slate-900 dark:text-slate-100">Total Pagado</th>
+                      <th class="px-6 py-3 text-center font-semibold text-slate-900 dark:text-slate-100">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">Acme Corp</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">DataBot</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <div class="flex gap-2 flex-wrap">
+                          <span class="inline-block px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-medium">Web Browsing</span>
+                          <span class="inline-block px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-medium">Document Analysis</span>
+                        </div>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-01-15</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-04-15</td>
+                      <td class="px-3 md:px-6 py-4 text-right font-mono font-semibold text-slate-900 dark:text-indigo-100">$4,500.00</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">TechVision Inc</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">WebScraperAI</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <div class="flex gap-2 flex-wrap">
+                          <span class="inline-block px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-medium">Web Browsing</span>
+                          <span class="inline-block px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-medium">Email Management</span>
+                        </div>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-02-01</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-05-01</td>
+                      <td class="px-3 md:px-6 py-4 text-right font-mono font-semibold text-slate-900 dark:text-indigo-100">$3,800.00</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">Global Analytics</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">AnalysisBot</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <div class="flex gap-2 flex-wrap">
+                          <span class="inline-block px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-medium">Document Analysis</span>
+                          <span class="inline-block px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-medium">Data Visualization</span>
+                        </div>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-01-20</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Activo</td>
+                      <td class="px-3 md:px-6 py-4 text-right font-mono font-semibold text-slate-900 dark:text-indigo-100">$6,200.00</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">Digital Solutions</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">DataBot</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <div class="flex gap-2 flex-wrap">
+                          <span class="inline-block px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-medium">Calendar Integration</span>
+                        </div>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-03-10</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-06-10</td>
+                      <td class="px-3 md:px-6 py-4 text-right font-mono font-semibold text-slate-900 dark:text-indigo-100">$2,000.00</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">Future Tech</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">AnalysisBot</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <div class="flex gap-2 flex-wrap">
+                          <span class="inline-block px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-medium">Code Execution</span>
+                        </div>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-02-28</td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">2024-05-28</td>
+                      <td class="px-3 md:px-6 py-4 text-right font-mono font-semibold text-slate-900 dark:text-indigo-100">$3,500.00</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Errores Section -->
+          <section id="errores" class="section space-y-6 hidden">
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-indigo-50">Log de Errores</h1>
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Timestamp</th>
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Agente</th>
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Tipo</th>
+                      <th class="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">Descripción</th>
+                      <th class="px-6 py-3 text-center font-semibold text-slate-900 dark:text-slate-100">Estado</th>
+                      <th class="px-6 py-3 text-center font-semibold text-slate-900 dark:text-slate-100">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                    <!-- Error 1: Crítico -->
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400">2024-03-15 14:32:18</td>
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">WebScraperAI</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <span class="inline-block px-2 py-1 rounded-md bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-xs font-medium">Crítico</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Conexión perdida con servidor remoto</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <span class="inline-block px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">Pendiente</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <div class="flex gap-2 justify-center">
+                          <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Error 2: Advertencia -->
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400">2024-03-15 13:45:02</td>
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">DataBot</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <span class="inline-block px-2 py-1 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-xs font-medium">Advertencia</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Tiempo de respuesta lento (> 5s)</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <span class="inline-block px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">Pendiente</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <div class="flex gap-2 justify-center">
+                          <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Error 3: Información Resuelto -->
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400">2024-03-15 12:15:47</td>
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">AnalysisBot</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <span class="inline-block px-2 py-1 rounded-md bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-medium">Información</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Certificado SSL vencerá en 7 días</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <span class="inline-block px-2 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-medium">✓ Resuelto</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <div class="flex gap-2 justify-center">
+                          <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Error 4: Crítico Resuelto -->
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400">2024-03-15 11:22:30</td>
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">WebScraperAI</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <span class="inline-block px-2 py-1 rounded-md bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-xs font-medium">Crítico</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Fallo en autenticación OAuth2</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <span class="inline-block px-2 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-medium">✓ Resuelto</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <div class="flex gap-2 justify-center">
+                          <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Error 5: Advertencia -->
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400">2024-03-15 10:08:15</td>
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">DataBot</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <span class="inline-block px-2 py-1 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-xs font-medium">Advertencia</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Uso de memoria en 85%</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <span class="inline-block px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">Pendiente</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <div class="flex gap-2 justify-center">
+                          <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Error 6: Información -->
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td class="px-3 md:px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400">2024-03-15 09:33:45</td>
+                      <td class="px-3 md:px-6 py-4 font-medium text-slate-900 dark:text-slate-100">AnalysisBot</td>
+                      <td class="px-3 md:px-6 py-4">
+                        <span class="inline-block px-2 py-1 rounded-md bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-medium">Información</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-slate-700 dark:text-slate-300">Actualización del sistema completada</td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <span class="inline-block px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">Pendiente</span>
+                      </td>
+                      <td class="px-3 md:px-6 py-4 text-center">
+                        <div class="flex gap-2 justify-center">
+                          <button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <!-- Configure Agent Modal -->
+  <div id="configure-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900">
+        <h2 class="text-xl font-semibold text-slate-900 dark:text-indigo-50">Configurar Agente</h2>
+        <button id="close-configure" class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <div class="px-4 md:px-6 py-6 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-900 dark:text-indigo-50 mb-2">Nombre del Agente</label>
+          <input id="configure-agent-name" type="text" class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-indigo-50 placeholder-slate-400 dark:placeholder-slate-500" disabled>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-slate-900 dark:text-indigo-50 mb-2">System Prompt</label>
+          <textarea id="configure-system-prompt" class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-indigo-50 placeholder-slate-400 dark:placeholder-slate-500 font-mono text-sm" rows="8" placeholder="Ingresa las instrucciones del sistema..."></textarea>
+        </div>
+      </div>
+      
+      <div class="px-4 md:px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-2 justify-end">
+        <button id="cancel-configure" class="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancelar</button>
+        <button id="save-configure" class="px-4 py-2 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors font-medium">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl max-w-sm w-full">
+      <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h2 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Eliminar Agente</h2>
+      </div>
+      
+      <div class="px-6 py-6">
+        <p class="text-slate-600 dark:text-slate-300">¿Estás seguro de que deseas eliminar el agente <strong id="delete-agent-name"></strong>? Esta acción no se puede deshacer.</p>
+      </div>
+      
+      <div class="px-4 md:px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-2 justify-end">
+        <button id="cancel-delete" class="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancelar</button>
+        <button id="confirm-delete" class="px-4 py-2 rounded-lg bg-rose-600 dark:bg-rose-500 text-white hover:bg-rose-700 dark:hover:bg-rose-600 transition-colors font-medium">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Detail Modal -->
+  <div id="error-detail-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900">
+        <h2 class="text-xl font-semibold text-slate-900 dark:text-indigo-50">Detalle del Error</h2>
+        <button id="close-error-detail" class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <div class="px-6 py-6 space-y-6">
+        <!-- Error Info -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div>
+            <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Timestamp</label>
+            <p id="error-detail-timestamp" class="text-slate-900 dark:text-indigo-50 font-mono text-sm"></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Agente</label>
+            <p id="error-detail-agent" class="text-slate-900 dark:text-indigo-50"></p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Tipo de Error</label>
+          <p id="error-detail-type" class="text-slate-900 dark:text-indigo-50"></p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Descripción</label>
+          <p id="error-detail-description" class="text-slate-900 dark:text-indigo-50"></p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Stack Trace</label>
+          <pre id="error-detail-stack" class="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg text-xs font-mono text-slate-900 dark:text-indigo-50 overflow-x-auto"></pre>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Estado</label>
+          <p id="error-detail-status" class="text-slate-900 dark:text-indigo-50"></p>
+        </div>
+      </div>
+      
+      <div class="px-4 md:px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-2 justify-end">
+        <button id="close-error-detail-btn" class="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cerrar</button>
+        <button id="mark-resolved-btn" class="px-4 py-2 rounded-lg bg-emerald-600 dark:bg-emerald-500 text-white hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors font-medium" style="display: none;">Marcar como Resuelto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Detail Modal -->
+  <div id="user-detail-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900">
+        <h2 class="text-xl font-semibold text-slate-900 dark:text-indigo-50">Detalle del Usuario</h2>
+        <button id="close-user-detail" class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <div class="px-4 md:px-6 py-6 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Nombre</label>
+          <p id="user-detail-name" class="text-slate-900 dark:text-indigo-50"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Email</label>
+          <p id="user-detail-email" class="text-slate-900 dark:text-indigo-50 font-mono"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Plan</label>
+          <p id="user-detail-plan" class="text-slate-900 dark:text-indigo-50"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Estado</label>
+          <p id="user-detail-status" class="text-slate-900 dark:text-indigo-50"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Fecha de Registro</label>
+          <p id="user-detail-registered" class="text-slate-900 dark:text-indigo-50 font-mono"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Información de la Cuenta</label>
+          <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg text-sm text-slate-700 dark:text-slate-300">
+            <p id="user-detail-info"></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="px-4 md:px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-2 justify-end">
+        <button id="close-user-detail-btn" class="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete User Modal -->
+  <div id="delete-user-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl max-w-sm w-full">
+      <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h2 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Eliminar Usuario</h2>
+      </div>
+      
+      <div class="px-6 py-6">
+        <p class="text-slate-600 dark:text-slate-300">¿Estás seguro de que deseas eliminar el usuario <strong id="delete-user-name"></strong>? Esta acción no se puede deshacer.</p>
+      </div>
+      
+      <div class="px-4 md:px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-2 justify-end">
+        <button id="cancel-delete-user" class="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancelar</button>
+        <button id="confirm-delete-user" class="px-4 py-2 rounded-lg bg-rose-600 dark:bg-rose-500 text-white hover:bg-rose-700 dark:hover:bg-rose-600 transition-colors font-medium">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skill Detail Modal -->
+  <div id="skill-detail-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900">
+        <h2 class="text-xl font-semibold text-slate-900 dark:text-indigo-50">Detalle de Skill</h2>
+        <button id="close-skill-detail" class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <div class="px-4 md:px-6 py-6 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Nombre</label>
+          <p id="skill-detail-name" class="text-slate-900 dark:text-indigo-50 font-semibold"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Descripción</label>
+          <p id="skill-detail-description" class="text-slate-900 dark:text-indigo-50"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Agentes que utilizan esta skill</label>
+          <div id="skill-detail-agents" class="space-y-2"></div>
+        </div>
+      </div>
+      
+      <div class="px-4 md:px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-2 justify-end">
+        <button id="close-skill-detail-btn" class="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Skill Modal -->
+  <div id="delete-skill-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl max-w-sm w-full">
+      <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h2 class="text-lg font-semibold text-slate-900 dark:text-indigo-50">Eliminar Skill</h2>
+      </div>
+      
+      <div class="px-6 py-6">
+        <p class="text-slate-600 dark:text-slate-300">¿Estás seguro de que deseas eliminar la skill <strong id="delete-skill-name"></strong>? Esta acción no se puede deshacer.</p>
+      </div>
+      
+      <div class="px-4 md:px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-2 justify-end">
+        <button id="cancel-delete-skill" class="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancelar</button>
+        <button id="confirm-delete-skill" class="px-4 py-2 rounded-lg bg-rose-600 dark:bg-rose-500 text-white hover:bg-rose-700 dark:hover:bg-rose-600 transition-colors font-medium">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contract Detail Modal -->
+  <div id="contract-detail-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="px-4 md:px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900">
+        <h2 class="text-xl font-semibold text-slate-900 dark:text-indigo-50">Detalle del Contrato</h2>
+        <button id="close-contract-detail" class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <div class="px-6 py-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div>
+            <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Cliente</label>
+            <p id="contract-detail-client" class="text-slate-900 dark:text-indigo-50 font-semibold"></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Agente</label>
+            <p id="contract-detail-agent" class="text-slate-900 dark:text-indigo-50"></p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div>
+            <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Fecha Inicio</label>
+            <p id="contract-detail-start" class="text-slate-900 dark:text-indigo-50 font-mono text-sm"></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Fecha Fin</label>
+            <p id="contract-detail-end" class="text-slate-900 dark:text-indigo-50 font-mono text-sm"></p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Skills Contratadas</label>
+          <div id="contract-detail-skills" class="space-y-2"></div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+          <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-3">Desglose de Precios</label>
+          <div id="contract-detail-pricing" class="space-y-2 bg-slate-50 dark:bg-slate-800 p-4 rounded-lg"></div>
+          <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-between">
+            <span class="font-semibold text-slate-900 dark:text-indigo-50">Importe Total</span>
+            <span id="contract-detail-total" class="font-bold text-lg text-indigo-600 dark:text-indigo-300"></span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="px-4 md:px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-2 justify-end">
+        <button id="close-contract-detail-btn" class="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Management
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    function initTheme() {
+      const saved = localStorage.getItem('agenthub-theme');
+      const isDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) html.classList.add('dark');
+      updateThemeIcon();
+    }
+
+    function updateThemeIcon() {
+      themeToggle.querySelector('span').textContent = html.classList.contains('dark') ? 'dark_mode' : 'light_mode';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('agenthub-theme', html.classList.contains('dark') ? 'dark' : 'light');
+      updateThemeIcon();
+    });
+
+    // Navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const path = link.dataset.path;
+        
+        // Update active state
+        document.querySelectorAll('.nav-link').forEach(l => {
+          l.classList.remove('bg-indigo-50', 'dark:bg-indigo-900/30', 'text-indigo-600', 'dark:text-indigo-300', 'font-medium');
+          l.classList.add('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-100', 'dark:hover:bg-slate-800');
+        });
+        link.classList.add('bg-indigo-50', 'dark:bg-indigo-900/30', 'text-indigo-600', 'dark:text-indigo-300', 'font-medium');
+        link.classList.remove('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-100', 'dark:hover:bg-slate-800');
+        
+        // Update section visibility
+        document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+        document.getElementById(path).classList.remove('hidden');
+        
+        // Update page title
+        const titles = { dashboard: 'Dashboard', usuarios: 'Usuarios', agentes: 'Agentes', skills: 'Skills', contrataciones: 'Contrataciones', errores: 'Log de Errores' };
+        document.getElementById('page-title').textContent = titles[path];
+      });
+    });
+
+    // Agent Skills Toggle
+    document.querySelectorAll('.agent-skills-toggle').forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        const icon = button.querySelector('.material-symbols-outlined');
+        
+        content.classList.toggle('hidden');
+        icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+    });
+
+    // Configure Agent Modal
+    const configureModal = document.getElementById('configure-modal');
+    const closeConfigureBtn = document.getElementById('close-configure');
+    const cancelConfigureBtn = document.getElementById('cancel-configure');
+    const saveConfigureBtn = document.getElementById('save-configure');
+    const configureAgentName = document.getElementById('configure-agent-name');
+    const configureSystemPrompt = document.getElementById('configure-system-prompt');
+    let currentAgentName = '';
+
+    // Load agents from localStorage
+    function loadAgents() {
+      const saved = localStorage.getItem('agenthub-agents');
+      return saved ? JSON.parse(saved) : {};
+    }
+
+    // Save agents to localStorage
+    function saveAgents(agents) {
+      localStorage.setItem('agenthub-agents', JSON.stringify(agents));
+    }
+
+    // Get default system prompt
+    function getDefaultSystemPrompt(agentName) {
+      const prompts = {
+        'DataBot': 'You are DataBot, an intelligent agent specialized in data extraction and analysis. Your purpose is to retrieve, process, and analyze data from various sources efficiently.',
+        'WebScraperAI': 'You are WebScraperAI, an expert web scraper. Your role is to navigate websites, extract relevant information, and present it in a structured format.',
+        'AnalysisBot': 'You are AnalysisBot, a data analysis specialist. Your expertise lies in processing complex datasets and generating meaningful insights.'
+      };
+      return prompts[agentName] || 'You are an intelligent agent. Help the user accomplish their goals efficiently.';
+    }
+
+    // Open configure modal
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.trim() === 'Configurar') {
+        btn.addEventListener('click', (e) => {
+          const agentCard = btn.closest('.bg-white');
+          const agentName = agentCard.querySelector('h3').textContent;
+          currentAgentName = agentName;
+          
+          configureAgentName.value = agentName;
+          
+          const agents = loadAgents();
+          configureSystemPrompt.value = agents[agentName]?.systemPrompt || getDefaultSystemPrompt(agentName);
+          
+          configureModal.classList.remove('hidden');
+        });
+      }
+    });
+
+    closeConfigureBtn.addEventListener('click', () => {
+      configureModal.classList.add('hidden');
+    });
+
+    cancelConfigureBtn.addEventListener('click', () => {
+      configureModal.classList.add('hidden');
+    });
+
+    saveConfigureBtn.addEventListener('click', () => {
+      const agents = loadAgents();
+      if (!agents[currentAgentName]) agents[currentAgentName] = {};
+      agents[currentAgentName].systemPrompt = configureSystemPrompt.value;
+      saveAgents(agents);
+      
+      // Show feedback
+      const originalText = saveConfigureBtn.textContent;
+      saveConfigureBtn.textContent = '✓ Guardado';
+      saveConfigureBtn.classList.add('bg-emerald-600', 'dark:bg-emerald-500', 'hover:bg-emerald-700', 'dark:hover:bg-emerald-600');
+      saveConfigureBtn.classList.remove('bg-indigo-600', 'dark:bg-indigo-500', 'hover:bg-indigo-700', 'dark:hover:bg-indigo-600');
+      
+      setTimeout(() => {
+        saveConfigureBtn.textContent = originalText;
+        saveConfigureBtn.classList.remove('bg-emerald-600', 'dark:bg-emerald-500', 'hover:bg-emerald-700', 'dark:hover:bg-emerald-600');
+        saveConfigureBtn.classList.add('bg-indigo-600', 'dark:bg-indigo-500', 'hover:bg-indigo-700', 'dark:hover:bg-indigo-600');
+        configureModal.classList.add('hidden');
+      }, 1500);
+    });
+
+    // Close modal on backdrop click
+    configureModal.addEventListener('click', (e) => {
+      if (e.target === configureModal) {
+        configureModal.classList.add('hidden');
+      }
+    });
+
+    // Delete Agent Modal
+    const deleteModal = document.getElementById('delete-modal');
+    const cancelDeleteBtn = document.getElementById('cancel-delete');
+    const confirmDeleteBtn = document.getElementById('confirm-delete');
+    const deleteAgentName = document.getElementById('delete-agent-name');
+    let agentToDelete = null;
+
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.trim() === 'Eliminar') {
+        btn.addEventListener('click', (e) => {
+          const agentCard = btn.closest('.bg-white');
+          const agentName = agentCard.querySelector('h3').textContent;
+          agentToDelete = { name: agentName, element: agentCard };
+          
+          deleteAgentName.textContent = agentName;
+          deleteModal.classList.remove('hidden');
+        });
+      }
+    });
+
+    cancelDeleteBtn.addEventListener('click', () => {
+      deleteModal.classList.add('hidden');
+    });
+
+    confirmDeleteBtn.addEventListener('click', () => {
+      if (agentToDelete) {
+        // Save to localStorage
+        const deletedAgents = JSON.parse(localStorage.getItem('agenthub-deleted-agents') || '[]');
+        deletedAgents.push(agentToDelete.name);
+        localStorage.setItem('agenthub-deleted-agents', JSON.stringify(deletedAgents));
+        
+        // Remove from DOM
+        agentToDelete.element.style.opacity = '0';
+        agentToDelete.element.style.transform = 'scale(0.95)';
+        
+        setTimeout(() => {
+          agentToDelete.element.remove();
+          deleteModal.classList.add('hidden');
+        }, 300);
+      }
+    });
+
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) {
+        deleteModal.classList.add('hidden');
+      }
+    });
+
+    // Hide deleted agents on load
+    const deletedAgents = JSON.parse(localStorage.getItem('agenthub-deleted-agents') || '[]');
+    document.querySelectorAll('#agentes .bg-white').forEach(card => {
+      const agentName = card.querySelector('h3').textContent;
+      if (deletedAgents.includes(agentName)) {
+        card.remove();
+      }
+    });
+
+    // ===== ERROR LOG FUNCTIONALITY =====
+    
+    const errorDetailModal = document.getElementById('error-detail-modal');
+    const closeErrorDetailBtn = document.getElementById('close-error-detail');
+    const closeErrorDetailBtnEnd = document.getElementById('close-error-detail-btn');
+    const markResolvedBtn = document.getElementById('mark-resolved-btn');
+    let currentError = null;
+
+    // Error data structure
+    const errors = [
+      { id: 1, timestamp: '2024-03-15 14:32:18', agent: 'WebScraperAI', type: 'Crítico', description: 'Conexión perdida con servidor remoto', status: 'pending', stack: 'Error: Connection timeout\n  at fetchData() [line 42]\n  at WebScraperAI.execute() [line 156]\nCaused by: ECONNREFUSED 192.168.1.100:3306' },
+      { id: 2, timestamp: '2024-03-15 13:45:02', agent: 'DataBot', type: 'Advertencia', description: 'Tiempo de respuesta lento (> 5s)', status: 'pending', stack: 'Performance warning:\n  Response time: 5234ms\n  at analyzeData() [line 89]\n  at DataBot.process() [line 203]' },
+      { id: 3, timestamp: '2024-03-15 12:15:47', agent: 'AnalysisBot', type: 'Información', description: 'Certificado SSL vencerá en 7 días', status: 'resolved', stack: 'Info: Certificate expiration warning\n  Certificate: *.agenthub.local\n  Expiration date: 2024-03-22\n  Action: Renew certificate before expiration' },
+      { id: 4, timestamp: '2024-03-15 11:22:30', agent: 'WebScraperAI', type: 'Crítico', description: 'Fallo en autenticación OAuth2', status: 'resolved', stack: 'Error: OAuth2 Authentication Failed\n  at authenticateUser() [line 78]\n  at WebScraperAI.init() [line 45]\n  Invalid or expired token' },
+      { id: 5, timestamp: '2024-03-15 10:08:15', agent: 'DataBot', type: 'Advertencia', description: 'Uso de memoria en 85%', status: 'pending', stack: 'Warning: High memory usage\n  Current: 850MB / 1000MB\n  Threshold: 85%\n  Recommendation: Consider scaling or optimizing' }
+    ];
+
+    // Load error resolved states from localStorage
+    function getErrorState(errorId) {
+      const resolved = JSON.parse(localStorage.getItem('agenthub-errors-resolved') || '[]');
+      return resolved.includes(errorId);
+    }
+
+    // Open error detail modal
+    document.querySelectorAll('#errores tbody tr').forEach(row => {
+      const verBtn = row.querySelector('button');
+      if (verBtn) {
+        verBtn.addEventListener('click', () => {
+          const timestamp = row.cells[0].textContent.trim();
+          const error = errors.find(e => e.timestamp === timestamp);
+          if (error) {
+            currentError = error;
+            const isResolved = getErrorState(error.id);
+            
+            document.getElementById('error-detail-timestamp').textContent = error.timestamp;
+            document.getElementById('error-detail-agent').textContent = error.agent;
+            document.getElementById('error-detail-type').innerHTML = `<span class="inline-block px-2 py-1 rounded-md text-xs font-medium ${
+              error.type === 'Crítico' ? 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300' :
+              error.type === 'Advertencia' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300' :
+              'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300'
+            }">${error.type}</span>`;
+            document.getElementById('error-detail-description').textContent = error.description;
+            document.getElementById('error-detail-stack').textContent = error.stack;
+            document.getElementById('error-detail-status').innerHTML = isResolved ? 
+              '<span class="inline-block px-2 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-medium">✓ Resuelto</span>' :
+              '<span class="inline-block px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">Pendiente</span>';
+            
+            markResolvedBtn.style.display = isResolved ? 'none' : 'block';
+            errorDetailModal.classList.remove('hidden');
+          }
+        });
+      }
+    });
+
+    // Handle error detail modal close buttons
+    closeErrorDetailBtn.addEventListener('click', () => errorDetailModal.classList.add('hidden'));
+    closeErrorDetailBtnEnd.addEventListener('click', () => errorDetailModal.classList.add('hidden'));
+
+    // Mark error as resolved
+    markResolvedBtn.addEventListener('click', () => {
+      if (currentError) {
+        const resolved = JSON.parse(localStorage.getItem('agenthub-errors-resolved') || '[]');
+        if (!resolved.includes(currentError.id)) {
+          resolved.push(currentError.id);
+          localStorage.setItem('agenthub-errors-resolved', JSON.stringify(resolved));
+        }
+        
+        // Update the row in the table
+        const rows = document.querySelectorAll('#errores tbody tr');
+        rows.forEach(row => {
+          if (row.cells[0].textContent.includes(currentError.timestamp)) {
+            const statusCell = row.cells[4];
+            statusCell.innerHTML = '<span class="inline-block px-2 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-medium">✓ Resuelto</span>';
+            const actionsCell = row.cells[5];
+            actionsCell.innerHTML = '<div class="flex gap-2 justify-center"><button class="px-3 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Ver</button></div>';
+            
+            // Re-attach event listener to new button
+            const newBtn = actionsCell.querySelector('button');
+            newBtn.addEventListener('click', () => {
+              currentError = currentError;
+              const isResolved = getErrorState(currentError.id);
+              
+              document.getElementById('error-detail-timestamp').textContent = currentError.timestamp;
+              document.getElementById('error-detail-agent').textContent = currentError.agent;
+              document.getElementById('error-detail-type').innerHTML = `<span class="inline-block px-2 py-1 rounded-md text-xs font-medium ${
+                currentError.type === 'Crítico' ? 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300' :
+                currentError.type === 'Advertencia' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300' :
+                'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300'
+              }">${currentError.type}</span>`;
+              document.getElementById('error-detail-description').textContent = currentError.description;
+              document.getElementById('error-detail-stack').textContent = currentError.stack;
+              document.getElementById('error-detail-status').innerHTML = isResolved ? 
+                '<span class="inline-block px-2 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-medium">✓ Resuelto</span>' :
+                '<span class="inline-block px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">Pendiente</span>';
+              
+              markResolvedBtn.style.display = isResolved ? 'none' : 'block';
+              errorDetailModal.classList.remove('hidden');
+            });
+          }
+        });
+        
+        markResolvedBtn.style.display = 'none';
+        const originalText = markResolvedBtn.textContent;
+        markResolvedBtn.textContent = '✓ Resuelto';
+        markResolvedBtn.classList.add('bg-emerald-600', 'dark:bg-emerald-500', 'hover:bg-emerald-700', 'dark:hover:bg-emerald-600');
+        markResolvedBtn.classList.remove('bg-indigo-600', 'dark:bg-indigo-500', 'hover:bg-indigo-700', 'dark:hover:bg-indigo-600');
+        
+        setTimeout(() => {
+          errorDetailModal.classList.add('hidden');
+        }, 1000);
+      }
+    });
+
+    errorDetailModal.addEventListener('click', (e) => {
+      if (e.target === errorDetailModal) {
+        errorDetailModal.classList.add('hidden');
+      }
+    });
+
+    // Load resolved errors on page load
+    const resolvedErrors = JSON.parse(localStorage.getItem('agenthub-errors-resolved') || '[]');
+    document.querySelectorAll('#errores tbody tr').forEach(row => {
+      const timestamp = row.cells[0].textContent.trim();
+      const error = errors.find(e => e.timestamp === timestamp);
+      if (error && resolvedErrors.includes(error.id)) {
+        const statusCell = row.cells[4];
+        statusCell.innerHTML = '<span class="inline-block px-2 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-medium">✓ Resuelto</span>';
+      }
+    });
+
+    // ===== USERS FUNCTIONALITY =====
+    
+    const userDetailModal = document.getElementById('user-detail-modal');
+    const closeUserDetailBtn = document.getElementById('close-user-detail');
+    const closeUserDetailBtnEnd = document.getElementById('close-user-detail-btn');
+    
+    const deleteUserModal = document.getElementById('delete-user-modal');
+    const cancelDeleteUserBtn = document.getElementById('cancel-delete-user');
+    const confirmDeleteUserBtn = document.getElementById('confirm-delete-user');
+    const deleteUserName = document.getElementById('delete-user-name');
+    
+    let userToDelete = null;
+
+    // Open user detail
+    document.querySelectorAll('#usuarios tbody tr').forEach(row => {
+      const verBtn = row.querySelector('button:nth-child(1)');
+      if (verBtn) {
+        verBtn.addEventListener('click', () => {
+          const cells = row.cells;
+          document.getElementById('user-detail-name').textContent = cells[0].textContent;
+          document.getElementById('user-detail-email').textContent = cells[1].textContent;
+          document.getElementById('user-detail-plan').textContent = cells[2].textContent;
+          document.getElementById('user-detail-status').textContent = cells[3].textContent;
+          document.getElementById('user-detail-registered').textContent = new Date().toLocaleDateString();
+          document.getElementById('user-detail-info').textContent = 'Empresa: ' + cells[0].textContent + ' Inc. | Crédito disponible: $5000 | Último pago: hace 5 días';
+          userDetailModal.classList.remove('hidden');
+        });
+      }
+    });
+
+    closeUserDetailBtn.addEventListener('click', () => userDetailModal.classList.add('hidden'));
+    closeUserDetailBtnEnd.addEventListener('click', () => userDetailModal.classList.add('hidden'));
+
+    // Delete user
+    document.querySelectorAll('#usuarios tbody tr').forEach(row => {
+      const deleteBtn = row.querySelector('button:nth-child(2)');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+          const userName = row.cells[0].textContent;
+          userToDelete = { name: userName, element: row };
+          deleteUserName.textContent = userName;
+          deleteUserModal.classList.remove('hidden');
+        });
+      }
+    });
+
+    cancelDeleteUserBtn.addEventListener('click', () => deleteUserModal.classList.add('hidden'));
+
+    confirmDeleteUserBtn.addEventListener('click', () => {
+      if (userToDelete) {
+        userToDelete.element.style.opacity = '0';
+        userToDelete.element.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          userToDelete.element.remove();
+          deleteUserModal.classList.add('hidden');
+        }, 300);
+      }
+    });
+
+    userDetailModal.addEventListener('click', (e) => {
+      if (e.target === userDetailModal) userDetailModal.classList.add('hidden');
+    });
+    deleteUserModal.addEventListener('click', (e) => {
+      if (e.target === deleteUserModal) deleteUserModal.classList.add('hidden');
+    });
+
+    // ===== SKILLS FUNCTIONALITY =====
+    
+    const skillDetailModal = document.getElementById('skill-detail-modal');
+    const closeSkillDetailBtn = document.getElementById('close-skill-detail');
+    const closeSkillDetailBtnEnd = document.getElementById('close-skill-detail-btn');
+    
+    const deleteSkillModal = document.getElementById('delete-skill-modal');
+    const cancelDeleteSkillBtn = document.getElementById('cancel-delete-skill');
+    const confirmDeleteSkillBtn = document.getElementById('confirm-delete-skill');
+    const deleteSkillName = document.getElementById('delete-skill-name');
+    
+    let skillToDelete = null;
+
+    // Skill data
+    const skillsData = {
+      'Web Browsing': { agents: ['WebScraperAI', 'DataBot'] },
+      'Document Analysis': { agents: ['DataBot', 'AnalysisBot'] },
+      'Calendar Integration': { agents: ['AnalysisBot'] },
+      'Email Management': { agents: ['DataBot'] }
+    };
+
+    // Open skill detail
+    document.querySelectorAll('#skills .bg-white').forEach(card => {
+      const verBtn = card.querySelector('button');
+      if (verBtn && verBtn.textContent.includes('Ver')) {
+        verBtn.addEventListener('click', () => {
+          const skillName = card.querySelector('h3').textContent;
+          const skillDesc = card.querySelector('p:nth-of-type(1)').textContent;
+          document.getElementById('skill-detail-name').textContent = skillName;
+          document.getElementById('skill-detail-description').textContent = skillDesc;
+          
+          const agentsDiv = document.getElementById('skill-detail-agents');
+          agentsDiv.innerHTML = '';
+          const agents = skillsData[skillName]?.agents || [];
+          if (agents.length > 0) {
+            agents.forEach(agent => {
+              agentsDiv.innerHTML += `<div class="text-sm text-slate-700 dark:text-slate-300">• ${agent}</div>`;
+            });
+          } else {
+            agentsDiv.innerHTML = '<div class="text-sm text-slate-500 dark:text-slate-400">No hay agentes utilizando esta skill</div>';
+          }
+          
+          skillDetailModal.classList.remove('hidden');
+        });
+      }
+    });
+
+    closeSkillDetailBtn.addEventListener('click', () => skillDetailModal.classList.add('hidden'));
+    closeSkillDetailBtnEnd.addEventListener('click', () => skillDetailModal.classList.add('hidden'));
+
+    // Delete skill
+    document.querySelectorAll('#skills .bg-white').forEach(card => {
+      const btns = card.querySelectorAll('button');
+      const deleteBtn = btns[btns.length - 1];
+      if (deleteBtn && deleteBtn.textContent.includes('Eliminar')) {
+        deleteBtn.addEventListener('click', () => {
+          const skillName = card.querySelector('h3').textContent;
+          skillToDelete = { name: skillName, element: card };
+          deleteSkillName.textContent = skillName;
+          deleteSkillModal.classList.remove('hidden');
+        });
+      }
+    });
+
+    cancelDeleteSkillBtn.addEventListener('click', () => deleteSkillModal.classList.add('hidden'));
+
+    confirmDeleteSkillBtn.addEventListener('click', () => {
+      if (skillToDelete) {
+        skillToDelete.element.style.opacity = '0';
+        skillToDelete.element.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          skillToDelete.element.remove();
+          deleteSkillModal.classList.add('hidden');
+        }, 300);
+      }
+    });
+
+    skillDetailModal.addEventListener('click', (e) => {
+      if (e.target === skillDetailModal) skillDetailModal.classList.add('hidden');
+    });
+    deleteSkillModal.addEventListener('click', (e) => {
+      if (e.target === deleteSkillModal) deleteSkillModal.classList.add('hidden');
+    });
+
+    // ===== CONTRACT FUNCTIONALITY =====
+    
+    const contractDetailModal = document.getElementById('contract-detail-modal');
+    const closeContractDetailBtn = document.getElementById('close-contract-detail');
+    const closeContractDetailBtnEnd = document.getElementById('close-contract-detail-btn');
+
+    // Contract data
+    const contractsData = [
+      { client: 'TechCorp Inc.', agent: 'DataBot', start: '2024-01-15', end: '2024-12-31', skills: [{ name: 'Data Analysis', price: '$500' }, { name: 'Report Generation', price: '$300' }], total: '$800' },
+      { client: 'WebSolutions Ltd.', agent: 'WebScraperAI', start: '2024-02-01', end: '2024-12-31', skills: [{ name: 'Web Scraping', price: '$600' }, { name: 'Data Extraction', price: '$400' }], total: '$1,000' },
+      { client: 'Analytics Group', agent: 'AnalysisBot', start: '2024-03-10', end: '2024-11-30', skills: [{ name: 'Advanced Analytics', price: '$700' }, { name: 'Predictive Modeling', price: '$500' }], total: '$1,200' }
+    ];
+
+    // Open contract detail
+    document.querySelectorAll('#contrataciones tbody tr').forEach((row, idx) => {
+      const verBtn = row.querySelector('button');
+      if (verBtn) {
+        verBtn.addEventListener('click', () => {
+          const contract = contractsData[idx];
+          if (contract) {
+            document.getElementById('contract-detail-client').textContent = contract.client;
+            document.getElementById('contract-detail-agent').textContent = contract.agent;
+            document.getElementById('contract-detail-start').textContent = contract.start;
+            document.getElementById('contract-detail-end').textContent = contract.end;
+            
+            const skillsDiv = document.getElementById('contract-detail-skills');
+            skillsDiv.innerHTML = contract.skills.map(s => `<div class="text-sm text-slate-700 dark:text-slate-300">• ${s.name}</div>`).join('');
+            
+            const pricingDiv = document.getElementById('contract-detail-pricing');
+            pricingDiv.innerHTML = contract.skills.map(s => `<div class="flex justify-between text-sm"><span class="text-slate-700 dark:text-slate-300">${s.name}</span><span class="font-mono text-slate-900 dark:text-indigo-50">${s.price}</span></div>`).join('');
+            
+            document.getElementById('contract-detail-total').textContent = contract.total;
+            contractDetailModal.classList.remove('hidden');
+          }
+        });
+      }
+    });
+
+    closeContractDetailBtn.addEventListener('click', () => contractDetailModal.classList.add('hidden'));
+    closeContractDetailBtnEnd.addEventListener('click', () => contractDetailModal.classList.add('hidden'));
+
+    contractDetailModal.addEventListener('click', (e) => {
+      if (e.target === contractDetailModal) contractDetailModal.classList.add('hidden');
+    });
+
+    // ===== MOBILE MENU =====
+    const sidebar = document.querySelector('aside');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+
+    // Open sidebar
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebar.classList.add('mobile-open');
+      sidebarOverlay.classList.add('mobile-open');
+    });
+
+    // Close sidebar
+    closeSidebarBtn.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      sidebarOverlay.classList.remove('mobile-open');
+    });
+
+    // Close sidebar when clicking overlay
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      sidebarOverlay.classList.remove('mobile-open');
+    });
+
+    // Close sidebar when clicking nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        sidebar.classList.remove('mobile-open');
+        sidebarOverlay.classList.remove('mobile-open');
+      });
+    });
+  </script>
+</body>
+</html>

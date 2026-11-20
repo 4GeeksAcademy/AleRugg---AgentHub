@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-error-container":"#ffdad6","outline":"#908fa0","on-error":"#690005","surface-variant":"#2d3449","surface":"#0b1326","primary-container":"#8083ff","surface-container-highest":"#2d3449","outline-variant":"#464554","on-primary-container":"#0d0096","on-tertiary-fixed":"#002113","on-tertiary":"#003824","on-secondary-fixed":"#23005c","on-primary":"#1000a9","on-secondary-fixed-variant":"#5516be","on-tertiary-container":"#000703","surface-container-lowest":"#060e20","error-container":"#93000a","on-secondary-container":"#c4abff","inverse-on-surface":"#283044","surface-bright":"#31394d","on-background":"#dae2fd","primary-fixed":"#e1e0ff","tertiary-fixed":"#6ffbbe","surface-dim":"#0b1326","surface-container-low":"#131b2e","secondary-container":"#571bc1","tertiary":"#4edea3","primary-fixed-dim":"#c0c1ff","secondary-fixed-dim":"#d0bcff","inverse-surface":"#dae2fd","tertiary-fixed-dim":"#4edea3","on-primary-fixed-variant":"#2f2ebe","secondary":"#d0bcff","on-tertiary-fixed-variant":"#005236","surface-tint":"#c0c1ff","on-surface":"#dae2fd","background":"#0b1326","inverse-primary":"#494bd6","on-surface-variant":"#c7c4d7","error":"#ffb4ab","primary":"#c0c1ff","on-secondary":"#3c0091","secondary-fixed":"#e9ddff","surface-container-high":"#222a3d","tertiary-container":"#00885d","on-primary-fixed":"#07006c","surface-container":"#171f33"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-lg":"1.5rem","space-sm":"0.5rem","margin-md":"1.5rem","gutter":"1rem","space-xs":"0.25rem","gutter-md":"1.5rem","space-xl":"2rem","margin":"1rem","gutter-lg":"1.5rem","space-md":"1rem","margin-lg":"2rem"},"fontFamily":{"label-xs":["JetBrains Mono"],"body-lg":["Geist"],"label-sm":["JetBrains Mono"],"label-md":["JetBrains Mono"],"display":["Geist"],"headline-lg-mobile":["Geist"],"body-sm":["Geist"],"body-md":["Geist"],"headline-md":["Geist"],"headline-sm":["Geist"],"headline-lg":["Geist"]},"fontSize":{"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.04em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","letterSpacing":"0em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.03em","fontWeight":"500"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"display":["36px",{"lineHeight":"44px","letterSpacing":"-0.03em","fontWeight":"600"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","letterSpacing":"-0.005em","fontWeight":"400"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-sm":["16px",{"lineHeight":"24px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-lg":["30px",{"lineHeight":"38px","letterSpacing":"-0.025em","fontWeight":"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-on-primary-container text-[20px]">smart_toy</span></div><span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-on-surface">AgentHub</span></div><span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-xs text-label-xs tracking-wider uppercase font-semibold">Admin</span></div><nav class="flex flex-col gap-1 px-space-sm mt-space-md" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm"><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-body-md text-body-md">Dashboard</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm" data-path="usuarios" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span class="font-body-md text-body-md">Usuarios</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="agentes" href="#"><span class="material-symbols-outlined text-[20px]">robot_2</span><span class="font-body-md text-body-md">Agentes</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="skills" href="#"><span class="material-symbols-outlined text-[20px]">extension</span><span class="font-body-md text-body-md">Skills</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="contrataciones" href="#"><span class="material-symbols-outlined text-[20px]">work</span><span class="font-body-md text-body-md">Contrataciones</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="log-de-errores" href="#"><span class="material-symbols-outlined text-[20px]">warning</span><span class="font-body-md text-body-md">Log de errores</span></a></nav></div><div class="p-space-md"><div class="p-space-sm rounded-lg bg-surface-container flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span><span class="font-label-xs text-label-xs text-on-surface-variant">Fleet Status</span></div><span class="font-label-xs text-label-xs text-tertiary font-semibold">OPTIMAL</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 flex items-center justify-between px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-sm"><nav aria-label="Breadcrumb" class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm"><span class="hover:text-on-surface transition-colors cursor-pointer">Console</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-on-surface font-medium capitalize">System Overview</span></nav></div><div class="flex items-center gap-space-md"><div class="relative w-64 md:w-80"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full pl-9 pr-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search fleets, agents, logs..." type="text"/></div><button aria-label="Toggle theme" class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">dark_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 bg-background px-space-lg py-space-lg"><div class="flex flex-col w-full gap-space-lg">
+<!-- Top Stats & Controls Header -->
+<section class="flex flex-col gap-space-md">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs font-label-xs text-label-xs text-primary uppercase tracking-widest mb-1">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          Directorio Centralizado
+        </div>
+<div class="flex items-baseline gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg font-semibold text-on-surface tracking-tight">Gestión de Usuarios</h1>
+<span class="font-label-sm text-label-sm px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-medium" id="userCountBadge">1,248 registrados</span>
+</div>
+</div>
+<!-- Quick Action Utilities -->
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-space-xs px-3 py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors text-body-sm font-body-sm shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Exportar CSV</span>
+</button>
+<button class="flex items-center gap-space-xs px-3.5 py-2 rounded-lg bg-primary-container text-on-primary-container hover:opacity-90 transition-opacity font-headline-sm text-body-md font-medium shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Nuevo Usuario</span>
+</button>
+</div>
+</div>
+<!-- Filter & Search Toolbar -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<div class="flex flex-1 items-center gap-space-sm">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-space-md py-2 rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all" id="searchInput" placeholder="Buscar por nombre, correo electrónico o ID..." type="text"/>
+</div>
+<!-- Status Filter Select -->
+<div class="relative">
+<select class="appearance-none bg-surface-container-lowest text-on-surface text-body-sm font-body-sm pl-3 pr-8 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer" id="statusFilter">
+<option value="ALL">Todos los Estados</option>
+<option value="Activo">Activo</option>
+<option value="Pendiente">Pendiente</option>
+<option value="Suspendido">Suspendido</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[16px]">expand_more</span>
+</div>
+<!-- Plan Filter Select -->
+<div class="relative">
+<select class="appearance-none bg-surface-container-lowest text-on-surface text-body-sm font-body-sm pl-3 pr-8 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer" id="planFilter">
+<option value="ALL">Todos los Planes</option>
+<option value="Enterprise">Enterprise</option>
+<option value="Pro">Pro</option>
+<option value="Starter">Starter</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[16px]">expand_more</span>
+</div>
+</div>
+<!-- Live Telemetry Mini-Badges -->
+<div class="flex items-center gap-space-md self-end lg:self-center">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">98.2% Actividad</span>
+</div>
+<div class="w-px h-4 bg-surface-container-highest"></div>
+<div class="font-label-xs text-label-xs text-outline">Sincronizado: Justo ahora</div>
+</div>
+</div>
+</section>
+<!-- USER-01: Main Table Container -->
+<section class="bg-surface-container-low rounded-xl shadow-sm overflow-visible">
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3.5 px-space-md font-medium">Nombre & Credenciales</th>
+<th class="py-3.5 px-space-md font-medium">Email Institucional</th>
+<th class="py-3.5 px-space-md font-medium">Plan de Flota</th>
+<th class="py-3.5 px-space-md font-medium">Estado</th>
+<th class="py-3.5 px-space-md font-medium text-right">Agentes Activos</th>
+<th class="py-3.5 px-space-md font-medium text-center w-20">Acciones</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md divide-y-0" id="userTableBody">
+<!-- Dynamic / Mocked Users will populate here via JS / initial render -->
+</tbody>
+</table>
+</div>
+<!-- Empty State Container (Hidden by default) -->
+<div class="hidden flex-col items-center justify-center py-16 px-space-md text-center" id="emptyState">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-outline mb-space-sm">
+<span class="material-symbols-outlined text-[28px]">search_off</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-1">Sin coincidencias encontradas</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm">No pudimos encontrar usuarios con los filtros aplicados. Intenta reiniciar la búsqueda o limpiar los selectores.</p>
+<button class="mt-space-md px-3 py-1.5 rounded-lg bg-surface-container text-on-surface text-body-sm font-body-sm hover:bg-surface-container-high transition-colors" onclick="resetFilters()">Limpiar Filtros</button>
+</div>
+<!-- Table Footer / Telemetry Bar -->
+<div class="bg-surface-container px-space-md py-3 rounded-b-xl flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="font-label-sm text-label-sm text-on-surface-variant">
+        Mostrando <span class="font-medium text-on-surface font-label-sm" id="displayedCount">6</span> de <span class="font-medium text-on-surface font-label-sm" id="totalCount">6</span> registros en vista directa
+      </div>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded bg-surface-container-low text-outline hover:text-on-surface transition-colors disabled:opacity-40" disabled="">
+<span class="material-symbols-outlined text-[16px] align-middle">chevron_left</span>
+</button>
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-xs text-label-xs font-semibold">1</span>
+<button class="px-2.5 py-1 rounded bg-surface-container-low text-outline hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px] align-middle">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- USER-03: User Detail Modal preview -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center p-space-md bg-surface-container-lowest/80 backdrop-blur-md" id="detailModal">
+<div class="relative w-full max-w-3xl bg-surface-container-low rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[921px]">
+<!-- Header Banner with Persona Image -->
+<div class="relative bg-surface-container-high p-space-lg flex items-start justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-16 h-16 rounded-xl bg-surface-container-lowest flex items-center justify-center font-headline-md text-headline-md font-semibold text-primary shadow-sm" id="modalAvatar">
+            EV
+          </div>
+<div>
+<div class="flex items-center gap-space-xs mb-1">
+<h2 class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight" id="modalUserName">Elena Vance</h2>
+<span class="px-2 py-0.5 rounded-full font-label-xs text-label-xs font-semibold uppercase" id="modalStatusBadge">Activo</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-label-xs" id="modalUserEmail">e.vance@blackmesa.internal</p>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors" id="closeModalBtn">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Modal Body (Scrollable Details) -->
+<div class="p-space-lg overflow-y-auto flex flex-col gap-space-lg">
+<!-- Top Metrics Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
+<div class="p-space-md rounded-lg bg-surface-container">
+<span class="font-label-xs text-label-xs text-outline uppercase">Plan Suscrito</span>
+<div class="font-headline-sm text-headline-sm text-primary font-semibold mt-1" id="modalPlanName">Enterprise Core</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant mt-0.5 block">Facturación Anual</span>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container">
+<span class="font-label-xs text-label-xs text-outline uppercase">Agentes en Renta</span>
+<div class="font-headline-sm text-headline-sm text-tertiary font-semibold mt-1" id="modalActiveAgents">14 Unidades</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant mt-0.5 block">100% Capacidad Asignada</span>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container">
+<span class="font-label-xs text-label-xs text-outline uppercase">Fecha de Registro</span>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold mt-1" id="modalCreatedAt">12 Feb, 2024</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant mt-0.5 block" id="modalAccountAge">Hace 8 meses</span>
+</div>
+</div>
+<!-- Telemetry Breakdown & Active Fleet -->
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Flota de Agentes Asignada</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm mt-1" id="modalAgentsList">
+<!-- Populated via JS -->
+</div>
+</div>
+<!-- Billing History -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Historial de Facturación</h3>
+<span class="font-label-xs text-label-xs text-outline">Últimos 3 ciclos</span>
+</div>
+<div class="rounded-lg bg-surface-container overflow-hidden">
+<div class="p-3 text-on-surface font-body-sm text-body-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary text-[18px]">receipt_long</span>
+<div>
+<div class="font-medium">INV-2024-0089</div>
+<div class="font-label-xs text-label-xs text-outline">01 Octubre, 2024</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-md text-label-md font-semibold text-on-surface">$1,450.00 USD</div>
+<span class="font-label-xs text-label-xs text-tertiary font-semibold">PAGADO</span>
+</div>
+</div>
+<div class="p-3 text-on-surface font-body-sm text-body-sm flex items-center justify-between bg-surface-container-high/40">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary text-[18px]">receipt_long</span>
+<div>
+<div class="font-medium">INV-2024-0074</div>
+<div class="font-label-xs text-label-xs text-outline">01 Septiembre, 2024</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-md text-label-md font-semibold text-on-surface">$1,450.00 USD</div>
+<span class="font-label-xs text-label-xs text-tertiary font-semibold">PAGADO</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-space-md bg-surface-container flex items-center justify-between">
+<button class="px-3 py-1.5 rounded-lg text-error hover:bg-error-container/20 text-body-sm font-body-sm transition-colors flex items-center gap-1" id="modalActionDelete">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+<span>Dar de baja usuario</span>
+</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-bright text-body-sm font-body-sm transition-colors" id="modalCloseActionBtn">
+          Cerrar Vista
+        </button>
+</div>
+</div>
+</div>
+<!-- Deletion Confirmation Dialog (COMMON-01) -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center p-space-md bg-surface-container-lowest/85 backdrop-blur-md" id="deleteConfirmModal">
+<div class="relative w-full max-w-md bg-surface-container-low rounded-xl shadow-xl p-space-lg flex flex-col gap-space-md">
+<div class="w-12 h-12 rounded-full bg-error-container/30 text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">warning</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Confirmar Eliminación</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          ¿Estás seguro de que deseas eliminar permanentemente a <span class="text-on-surface font-semibold" id="deleteTargetName">este usuario</span>? Sus agentes asignados serán liberados a la cola general y sus credenciales serán revocadas.
+        </p>
+</div>
+<div class="flex items-center justify-end gap-space-sm mt-space-xs">
+<button class="px-3.5 py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-body-sm font-body-sm transition-colors" id="cancelDeleteBtn">
+          Cancelar
+        </button>
+<button class="px-4 py-2 rounded-lg bg-error-container text-on-error-container hover:opacity-90 text-body-sm font-body-sm font-semibold transition-opacity flex items-center gap-1" id="confirmDeleteBtn">
+<span class="material-symbols-outlined text-[16px]">delete_forever</span>
+<span>Confirmar y Eliminar</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Toast Notification Feedback -->
+<div class="fixed bottom-6 right-6 z-50 hidden flex items-center gap-space-sm px-4 py-3 rounded-lg bg-surface-container-highest text-on-surface shadow-xl transition-transform duration-200" id="toastNotification">
+<span class="material-symbols-outlined text-tertiary text-[20px]" id="toastIcon">check_circle</span>
+<span class="font-body-sm text-body-sm" id="toastMessage">Operación ejecutada con éxito</span>
+</div>
+</div>
+<script>
+  (function () {
+    const STORAGE_KEY = 'agenthub_users_db_v1';
+
+    // Mock Data Initial Seed
+    const DEFAULT_USERS = [
+      {
+        id: 'usr-901',
+        name: 'Elena Vance',
+        email: 'e.vance@blackmesa.internal',
+        avatarInitials: 'EV',
+        plan: 'Enterprise',
+        status: 'Activo',
+        activeAgents: 14,
+        createdAt: '12 Feb, 2024',
+        accountAge: 'Hace 8 meses',
+        assignedAgents: [
+          { name: 'K8s Cluster Sentinel', type: 'DevOps / Orchestration', status: 'Online' },
+          { name: 'Vector Query Synthesizer', type: 'Database / RAG', status: 'Online' }
+        ]
+      },
+      {
+        id: 'usr-902',
+        name: 'Carlos Mendoza',
+        email: 'carlos.m@sintesis-ai.io',
+        avatarInitials: 'CM',
+        plan: 'Pro',
+        status: 'Activo',
+        activeAgents: 6,
+        createdAt: '24 Mar, 2024',
+        accountAge: 'Hace 7 meses',
+        assignedAgents: [
+          { name: 'Customer Support Triager', type: 'NLP / Conversational', status: 'Online' },
+          { name: 'Invoice Classifier', type: 'Vision OCR', status: 'Online' }
+        ]
+      },
+      {
+        id: 'usr-903',
+        name: 'Sarah Chen',
+        email: 's.chen@hyperion-quantum.tech',
+        avatarInitials: 'SC',
+        plan: 'Enterprise',
+        status: 'Activo',
+        activeAgents: 28,
+        createdAt: '03 Ene, 2024',
+        accountAge: 'Hace 9 meses',
+        assignedAgents: [
+          { name: 'Risk Analytics Neural Engine', type: 'Predictive Modeling', status: 'Online' },
+          { name: 'Autonomous Pentester Alpha', type: 'Security / Red Team', status: 'Online' }
+        ]
+      },
+      {
+        id: 'usr-904',
+        name: 'Marcos Silva',
+        email: 'marcos@silva-logistics.br',
+        avatarInitials: 'MS',
+        plan: 'Starter',
+        status: 'Pendiente',
+        activeAgents: 1,
+        createdAt: '02 Oct, 2024',
+        accountAge: 'Hace 3 días',
+        assignedAgents: [
+          { name: 'Fleet Routing Co-Pilot', type: 'Routing Optimization', status: 'Pending Setup' }
+        ]
+      },
+      {
+        id: 'usr-905',
+        name: 'Laura Gómez',
+        email: 'laura.gomez@neurovia.es',
+        avatarInitials: 'LG',
+        plan: 'Pro',
+        status: 'Suspendido',
+        activeAgents: 0,
+        createdAt: '15 May, 2024',
+        accountAge: 'Hace 5 meses',
+        assignedAgents: [
+          { name: 'Code Review Enforcer', type: 'Static Analysis', status: 'Suspended' }
+        ]
+      },
+      {
+        id: 'usr-906',
+        name: 'David Kim',
+        email: 'david.kim@seoul-nexus.kr',
+        avatarInitials: 'DK',
+        plan: 'Starter',
+        status: 'Activo',
+        activeAgents: 2,
+        createdAt: '19 Ago, 2024',
+        accountAge: 'Hace 2 meses',
+        assignedAgents: [
+          { name: 'Market Sentiment Streamer', type: 'Social Analytics', status: 'Online' }
+        ]
+      }
+    ];
+
+    // Local Storage Helpers (COMMON-04)
+    function loadUsers() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error('Failed to parse storage, using fallback', e);
+        }
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_USERS));
+      return DEFAULT_USERS;
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+    }
+
+    let usersState = loadUsers();
+    let pendingDeleteUserId = null;
+
+    // Badges Styling Helpers
+    function getPlanBadge(plan) {
+      switch (plan) {
+        case 'Enterprise':
+          return '<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-xs text-label-xs font-semibold uppercase">Enterprise</span>';
+        case 'Pro':
+          return '<span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-xs text-label-xs font-semibold uppercase">Pro</span>';
+        case 'Starter':
+          return '<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs font-semibold uppercase">Starter</span>';
+        default:
+          return `<span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-xs text-label-xs font-semibold">${plan}</span>`;
+      }
+    }
+
+    function getStatusBadge(status) {
+      switch (status) {
+        case 'Activo':
+          return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-tertiary-container/20 text-tertiary font-label-xs text-label-xs font-semibold uppercase">
+                    <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                    Activo
+                  </span>`;
+        case 'Pendiente':
+          return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-secondary font-label-xs text-label-xs font-semibold uppercase">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    Pendiente
+                  </span>`;
+        case 'Suspendido':
+          return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-error-container/20 text-error font-label-xs text-label-xs font-semibold uppercase">
+                    <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                    Suspendido
+                  </span>`;
+        default:
+          return status;
+      }
+    }
+
+    // Render Table Content (USER-01 & USER-02)
+    function renderTable() {
+      const tableBody = document.getElementById('userTableBody');
+      const emptyState = document.getElementById('emptyState');
+      const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+      const statusFilterVal = document.getElementById('statusFilter').value;
+      const planFilterVal = document.getElementById('planFilter').value;
+
+      const filtered = usersState.filter(user => {
+        const matchesQuery = user.name.toLowerCase().includes(searchVal) ||
+                             user.email.toLowerCase().includes(searchVal) ||
+                             user.id.toLowerCase().includes(searchVal);
+        const matchesStatus = statusFilterVal === 'ALL' || user.status === statusFilterVal;
+        const matchesPlan = planFilterVal === 'ALL' || user.plan === planFilterVal;
+        return matchesQuery && matchesStatus && matchesPlan;
+      });
+
+      // Update Counters
+      document.getElementById('displayedCount').textContent = filtered.length;
+      document.getElementById('totalCount').textContent = usersState.length;
+      document.getElementById('userCountBadge').textContent = `${usersState.length} registrados`;
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+
+      tableBody.innerHTML = filtered.map((u, index) => {
+        const isAlternate = index % 2 === 1 ? 'bg-surface-container-low/50' : 'bg-transparent';
+        return `
+          <tr class="${isAlternate} hover:bg-surface-container-high/40 transition-colors group relative">
+            <td class="py-3 px-space-md">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-9 h-9 rounded-lg bg-surface-container-high text-primary flex items-center justify-center font-label-md text-label-md font-semibold">
+                  ${u.avatarInitials}
+                </div>
+                <div>
+                  <div class="font-medium text-on-surface flex items-center gap-2">
+                    <span>${u.name}</span>
+                    <span class="font-label-xs text-label-xs text-outline">${u.id}</span>
+                  </div>
+                  <div class="font-label-xs text-label-xs text-outline">Registrado: ${u.createdAt}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-space-md font-label-xs text-label-xs text-on-surface-variant font-mono">
+              ${u.email}
+            </td>
+            <td class="py-3 px-space-md">
+              ${getPlanBadge(u.plan)}
+            </td>
+            <td class="py-3 px-space-md">
+              ${getStatusBadge(u.status)}
+            </td>
+            <td class="py-3 px-space-md text-right font-label-md text-label-md font-semibold text-on-surface">
+              ${u.activeAgents} <span class="font-label-xs text-label-xs text-outline font-normal">unidades</span>
+            </td>
+            <td class="py-3 px-space-md text-center relative">
+              <button 
+                type="button" 
+                data-dropdown-trigger="${u.id}" 
+                class="p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors"
+                aria-label="Acciones"
+              >
+                <span class="material-symbols-outlined text-[20px]">more_vert</span>
+              </button>
+
+              <!-- Dropdown Menu (COMMON-02) -->
+              <div 
+                id="dropdown-${u.id}" 
+                class="dropdown-menu hidden absolute right-space-md top-11 w-44 bg-surface-container-high rounded-xl shadow-xl py-1.5 z-30"
+              >
+                <button 
+                  type="button" 
+                  onclick="window.handleOpenDetail('${u.id}')"
+                  class="w-full text-left px-3.5 py-2 text-body-sm font-body-sm text-on-surface hover:bg-surface-container-highest transition-colors flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-[16px] text-primary">visibility</span>
+                  <span>Ver detalle</span>
+                </button>
+                <button 
+                  type="button" 
+                  onclick="window.handleOpenDeletePrompt('${u.id}')"
+                  class="w-full text-left px-3.5 py-2 text-body-sm font-body-sm text-error hover:bg-error-container/20 transition-colors flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-[16px]">delete</span>
+                  <span>Eliminar</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Dropdown Handlers (COMMON-02: Single Open, Click Outside)
+    function closeAllDropdowns() {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+    }
+
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-dropdown-trigger]');
+      if (trigger) {
+        e.stopPropagation();
+        const userId = trigger.getAttribute('data-dropdown-trigger');
+        const targetMenu = document.getElementById(`dropdown-${userId}`);
+        const wasOpen = !targetMenu.classList.contains('hidden');
+        closeAllDropdowns();
+        if (!wasOpen) {
+          targetMenu.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // If clicked inside dropdown, don't close immediately if clicking button, but close after action
+      if (!e.target.closest('.dropdown-menu')) {
+        closeAllDropdowns();
+      }
+    });
+
+    // Reset Filters Utility
+    window.resetFilters = function() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('statusFilter').value = 'ALL';
+      document.getElementById('planFilter').value = 'ALL';
+      renderTable();
+    };
+
+    // Filter Listeners
+    document.getElementById('searchInput').addEventListener('input', renderTable);
+    document.getElementById('statusFilter').addEventListener('change', renderTable);
+    document.getElementById('planFilter').addEventListener('change', renderTable);
+
+    // Toast Utility
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toastNotification');
+      const msg = document.getElementById('toastMessage');
+      const icon = document.getElementById('toastIcon');
+
+      msg.textContent = message;
+      if (isError) {
+        icon.textContent = 'error';
+        icon.className = 'material-symbols-outlined text-error text-[20px]';
+      } else {
+        icon.textContent = 'check_circle';
+        icon.className = 'material-symbols-outlined text-tertiary text-[20px]';
+      }
+
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+
+    // Modal Details (USER-03, COMMON-03)
+    const detailModal = document.getElementById('detailModal');
+    let currentDetailUserId = null;
+
+    window.handleOpenDetail = function(userId) {
+      closeAllDropdowns();
+      const user = usersState.find(u => u.id === userId);
+      if (!user) return;
+
+      currentDetailUserId = userId;
+
+      document.getElementById('modalAvatar').textContent = user.avatarInitials;
+      document.getElementById('modalUserName').textContent = user.name;
+      document.getElementById('modalUserEmail').textContent = user.email;
+      document.getElementById('modalPlanName').textContent = `${user.plan} Core Tier`;
+      document.getElementById('modalActiveAgents').textContent = `${user.activeAgents} Unidades`;
+      document.getElementById('modalCreatedAt').textContent = user.createdAt;
+      document.getElementById('modalAccountAge').textContent = user.accountAge;
+
+      // Status Badge
+      const statusBadge = document.getElementById('modalStatusBadge');
+      statusBadge.textContent = user.status;
+      if (user.status === 'Activo') {
+        statusBadge.className = 'px-2 py-0.5 rounded-full font-label-xs text-label-xs font-semibold uppercase bg-tertiary-container/30 text-tertiary';
+      } else if (user.status === 'Pendiente') {
+        statusBadge.className = 'px-2 py-0.5 rounded-full font-label-xs text-label-xs font-semibold uppercase bg-secondary-container text-on-secondary-container';
+      } else {
+        statusBadge.className = 'px-2 py-0.5 rounded-full font-label-xs text-label-xs font-semibold uppercase bg-error-container/30 text-error';
+      }
+
+      // Agents List
+      const agentsContainer = document.getElementById('modalAgentsList');
+      if (user.assignedAgents && user.assignedAgents.length > 0) {
+        agentsContainer.innerHTML = user.assignedAgents.map(ag => `
+          <div class="p-3 rounded-lg bg-surface-container flex items-center justify-between">
+            <div>
+              <div class="font-medium text-body-sm text-on-surface">${ag.name}</div>
+              <div class="font-label-xs text-label-xs text-outline">${ag.type}</div>
+            </div>
+            <span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container-high text-primary font-mono">${ag.status}</span>
+          </div>
+        `).join('');
+      } else {
+        agentsContainer.innerHTML = `
+          <div class="p-3 rounded-lg bg-surface-container text-outline font-body-sm text-body-sm italic col-span-2">
+            No cuenta con agentes activos desplegados en este periodo.
+          </div>
+        `;
+      }
+
+      detailModal.classList.remove('hidden');
+    };
+
+    function closeDetailModal() {
+      detailModal.classList.add('hidden');
+      currentDetailUserId = null;
+    }
+
+    document.getElementById('closeModalBtn').addEventListener('click', closeDetailModal);
+    document.getElementById('modalCloseActionBtn').addEventListener('click', closeDetailModal);
+
+    // Backdrop click close (COMMON-03)
+    detailModal.addEventListener('click', (e) => {
+      if (e.target === detailModal) {
+        closeDetailModal();
+      }
+    });
+
+    document.getElementById('modalActionDelete').addEventListener('click', () => {
+      if (currentDetailUserId) {
+        const idToDelete = currentDetailUserId;
+        closeDetailModal();
+        window.handleOpenDeletePrompt(idToDelete);
+      }
+    });
+
+    // Deletion Flow (COMMON-01, USER-02)
+    const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+
+    window.handleOpenDeletePrompt = function(userId) {
+      closeAllDropdowns();
+      const user = usersState.find(u => u.id === userId);
+      if (!user) return;
+
+      pendingDeleteUserId = userId;
+      document.getElementById('deleteTargetName').textContent = user.name;
+      deleteConfirmModal.classList.remove('hidden');
+    };
+
+    function closeDeleteModal() {
+      deleteConfirmModal.classList.add('hidden');
+      pendingDeleteUserId = null;
+    }
+
+    document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+
+    deleteConfirmModal.addEventListener('click', (e) => {
+      if (e.target === deleteConfirmModal) {
+        closeDeleteModal();
+      }
+    });
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+      if (!pendingDeleteUserId) return;
+      const targetUser = usersState.find(u => u.id === pendingDeleteUserId);
+      const userName = targetUser ? targetUser.name : 'Usuario';
+
+      // Perform deletion & persist to localStorage (COMMON-04)
+      usersState = usersState.filter(u => u.id !== pendingDeleteUserId);
+      saveUsers(usersState);
+
+      closeDeleteModal();
+      renderTable();
+      showToast(`Usuario "${userName}" eliminado correctamente.`);
+    });
+
+    // Keyboard ESC listener
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllDropdowns();
+        closeDetailModal();
+        closeDeleteModal();
+      }
+    });
+
+    // Initial table paint
+    renderTable();
+  })();
+</script></main></div></body></html>
